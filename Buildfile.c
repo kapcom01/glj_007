@@ -26,15 +26,15 @@ int create_static_library(void);
 const char CC[] = "cc";
 const char compiler_flags[] = "-std=c99 "
                               "-DPLATFORM_DESKTOP "
-                              "-Iinclude -I/home/kapcom01/Workspace/raylib/src/Build";
-const char linker_flags[] = "-lraylib "
-                            "-lm -L/home/kapcom01/Workspace/raylib/src/Build"; // -lm must be before -lraylib (why?)
-
+                              "-Iinclude -Iraylib";
+const char linker_flags[] = "-framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL "
+                            "-Lraylib "
+                            "-lraylib "
+                            "-lm"; // -lm must be after -lraylib (why?)
 const char *c_sources[] = {
     // add c source files here
     "main",
 };
-
 const char output_file[] = "exe";
 
 /****************************************************
@@ -127,15 +127,13 @@ int link_modules(void) {
     snprintf(link_command, sizeof(link_command),
              "%s %s -o %s",
              CC,
-             compiler_flags,
+             linker_flags,
              output_file);
     for (size_t i = 0; i < sizeof(c_sources)/sizeof(c_sources[0]); i++) {
         strncat(link_command, " ",          strlen(link_command));
         strncat(link_command, c_sources[i], strlen(link_command));
         strncat(link_command, ".o",         strlen(link_command));
     }
-    strncat(link_command, " ",          strlen(link_command));
-    strncat(link_command, linker_flags, strlen(link_command));
     printf("[Linking    ] %s\n", link_command);
     system(link_command);
     return 0;
