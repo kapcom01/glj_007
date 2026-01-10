@@ -24,7 +24,7 @@ int create_static_library(void);
  * ***************************/
 
 const char CC[] = "cc";
-const char compiler_flags[] = "-std=c99 "
+const char compiler_flags[] = "-std=c99 -g3 "
                               "-DPLATFORM_DESKTOP "
                               "-Iinclude -I/home/kapcom01/Workspace/raylib/src/Build";
 const char linker_flags[] = "-lraylib "
@@ -32,7 +32,8 @@ const char linker_flags[] = "-lraylib "
 
 const char *c_sources[] = {
     // add c source files here
-    "main",
+    "game",
+    "map"
 };
 
 const char output_file[] = "exe";
