@@ -35,7 +35,7 @@ typedef struct {
     Rectangle rec;
     TileType type;
     TileDirection direction;
-    uint16_t id;
+    uint16_t room_id;
 } MapTile;
 
 extern MapTile Map[MAP_GRID_X][MAP_GRID_Y];

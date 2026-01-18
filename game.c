@@ -17,11 +17,11 @@ void draw(void) {
 
     for(uint16_t i=0; i<MAP_GRID_X; ++i) {
         for (uint16_t j=0; j<MAP_GRID_Y; ++j) {
-            if (Map[i][j].id == 0) continue; // Todo(Manolis): unrevealed terrain
+            if (Map[i][j].type == 0) continue; // Todo(Manolis): Invalid type
             DrawRectangleRec(Map[i][j].rec, MapTileTypeColor[Map[i][j].type]);
             DrawRectangleLinesEx(Map[i][j].rec, 1.0f, BLACK);
             #define DRAW_PARAMS Map[i][j].rec.x+2, Map[i][j].rec.y+1, 7, WHITE
-            if (Map[i][j].type == kDebugId) DrawText(TextFormat("%d", Map[i][j].id), DRAW_PARAMS);
+            if (Map[i][j].type == kDebugId) DrawText(TextFormat("%d", Map[i][j].room_id), DRAW_PARAMS);
             switch (Map[i][j].direction) { 
             case kNorth:
                 DrawText("N", DRAW_PARAMS);
