@@ -26,16 +26,18 @@ int create_static_library(void);
 const char CC[] = "cc";
 const char compiler_flags[] = "-std=c99 -g3 "
                               "-DPLATFORM_DESKTOP "
-                              "-Iinclude -I/home/kapcom01/Workspace/raylib/src/Build";
+                              "-Iassets "
+                              "-I/home/kapcom01/Workspace/raylib/src/Build";
 const char linker_flags[] = "-lraylib "
                             "-lm -L/home/kapcom01/Workspace/raylib/src/Build"; // -lm must be before -lraylib (why?)
 
 const char *c_sources[] = {
     // add c source files here
-    "game",
-    "map"
+    "source/game",
+    "source/map"
 };
 
+const char output_dir[] = "build/linux";
 const char output_file[] = "exe";
 
 /****************************************************
@@ -124,11 +126,15 @@ int compile_modules(void) {
 }
 
 int link_modules(void) {
+    if ( fopen(output_dir, "r") == NULL ) {
+        mkdir(output_dir, 0755);
+    }
     char link_command[1024] = {0};
     snprintf(link_command, sizeof(link_command),
-             "%s %s -o %s",
+             "%s %s -o %s/%s",
              CC,
              compiler_flags,
+             output_dir,
              output_file);
     for (size_t i = 0; i < sizeof(c_sources)/sizeof(c_sources[0]); i++) {
         strncat(link_command, " ",          strlen(link_command));
