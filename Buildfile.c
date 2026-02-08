@@ -107,8 +107,7 @@ bool self_rebuild_is_necessary(const char *buildfile_exe_name) {
     if (utime(buildfile_exe_name, NULL) == -1) {
         if (errno) {
             fprintf(stderr,
-                    "[%s ] Error updating timestamps for %s\n",
-                    buildfile_exe_name,
+                    "[ERROR  ] Error updating timestamps for %s\n",
                     buildfile_exe_name);
             ret = true;
         }
@@ -118,7 +117,7 @@ bool self_rebuild_is_necessary(const char *buildfile_exe_name) {
 }
 
 int self_rebuild(const char *buildfile_exe_name) {
-    printf("[%s] Self Rebuilding...\n", BUILDFILE_NAME);
+    printf("[INFO   ] Self Rebuilding...\n");
     char rebuild_command[1024] = {0};
     snprintf(rebuild_command, sizeof(rebuild_command),
              "cc -std=c99 -Wall -Wpedantic -Wextra -Werror -o %s %s",
@@ -150,17 +149,23 @@ int compile_modules(Target t) {
                  "rm -f %s.o",
                  c_sources[i]);
         system(delete_command);
-        printf("[Compiling  ] %s\n", compile_command);
+        printf("[INFO   ] %s\n", compile_command);
         ret += system(compile_command);
     }
     return ret;
 }
 
 int link_modules(Target t) {
-    if ( fopen(output_dir[t], "r") == NULL ) {
-        fprintf(stderr, "[%s] Error: Build directory does not exist: %s\n", BUILDFILE_NAME, output_dir[t]);
-        return 1;
+    if (mkdir(output_dir[t], S_IRWXU)) {
+        switch (errno) {
+        case EEXIST:
+            break;
+        default:
+            fprintf(stderr, "[ERROR  ] %s: %s\n", output_dir[t], strerror(errno));
+            return 1;
+        }
     }
+
     char link_command[1024] = {0};
     snprintf(link_command, sizeof(link_command),
              "%s %s -o %s/%s",
@@ -175,7 +180,7 @@ int link_modules(Target t) {
     }
     strncat(link_command, " ",          strlen(link_command));
     strncat(link_command, linker_flags[t], strlen(link_command));
-    printf("[Linking    ] %s\n", link_command);
+    printf("[INFO   ] %s\n", link_command);
     return system(link_command);
 }
 
@@ -187,7 +192,7 @@ int create_static_library(Target t) {
         strncat(ar_command, c_sources[i], strlen(ar_command));
         strncat(ar_command, ".o",         strlen(ar_command));
     }
-    printf("[Archiving  ] %s\n", ar_command);
+    printf("[INFO   ] %s\n", ar_command);
     return system(ar_command);
 }
 
