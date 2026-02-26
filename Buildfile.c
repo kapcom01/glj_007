@@ -54,8 +54,8 @@ void setup_targets() {
                               "-Iraylib-5.5_linux_amd64/include";
     linker_flags[LINUX] = "-lm raylib-5.5_linux_amd64/lib/libraylib.a";
 
-    output_dir[LINUX] = "build/linux";
-    output_file[LINUX] = "exe";
+    output_dir[LINUX] = "build";
+    output_file[LINUX] = "game.exe";
 
     // MACOS
 
@@ -67,17 +67,18 @@ void setup_targets() {
     linker_flags[MACOS] = "-framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL "
                           "raylib-5.5_macos/lib/libraylib.a";
 
-    output_dir[MACOS] = "build/macos";
-    output_file[MACOS] = "exe";
+    output_dir[MACOS] = "build";
+    output_file[MACOS] = "game.exe";
 }
 
 /****************************************************
- * Use the build() function to build your project   *
+ * Use the build() function to build your project.  *
+ * You can call the API functions declared above.   *
  ****************************************************/
 
-int build() {
-    return compile_modules(LINUX)
-        || link_modules(LINUX);
+int build(Target target) {
+    return compile_modules(target)
+        || link_modules(target);
 }
 
 /************************************************
@@ -202,5 +203,11 @@ int main(int argc, char *argv[]) {
 
     setup_targets();
 
-    return build();
+#if defined(__APPLE__)
+    return build(MACOS);
+#elif defined(__linux__)
+    return build(MACOS);
+#else
+    #error "Target platformed not detected correctly"
+#endif
 }

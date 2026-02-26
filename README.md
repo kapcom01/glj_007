@@ -11,7 +11,6 @@ Prerequisites:
 
 Run:
 ```
-mkdir -p build/linux
 cc -o Buildfile Buildfile.c && ./Buildfile
 ```
 
@@ -19,5 +18,5 @@ cc -o Buildfile Buildfile.c && ./Buildfile
 
 Run the executable:
 ```
-./build/linux/exe
+./build/game.exe
 ```
