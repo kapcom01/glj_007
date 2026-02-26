@@ -1,6 +1,8 @@
 # fogair
 A Work-In-Progress Rogue-like game in C
 
+![screenshot](assets/screenshot.png)
+
 # Build
 
 Prerequisites:
@@ -9,6 +11,7 @@ Prerequisites:
 
 Run:
 ```
+mkdir -p build/linux
 cc -o Buildfile Buildfile.c && ./Buildfile
 ```
 
